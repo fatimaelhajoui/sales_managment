@@ -155,3 +155,22 @@ Handles agent-scoped routes:
 - Maven 3.8+
 - MySQL or PostgreSQL (for production)
 
+### Run locally (H2 dev mode)
+```bash
+git clone https://github.com/fatimaelhajoui/sales_managment.git
+cd sales_managment
+mvn spring-boot:run
+```
+The app will be available at `http://localhost:8080`.
+
+### Production setup
+Update `src/main/resources/application.properties` with your database credentials:
+```properties
+spring.datasource.url=jdbc:mysql://localhost:3306/callcenter
+spring.datasource.username=your_user
+spring.datasource.password=your_password
+spring.jpa.hibernate.ddl-auto=update
+```
+
+---
+

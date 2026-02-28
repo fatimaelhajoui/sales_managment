@@ -331,7 +331,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
             
 <div class="pagination-wrapper" th:if="${totalPages.length > 1}">
 
-  <!-- Previous button -->
+<!-- Previous button -->
   <a class="page-btn"
      th:classappend="${currentPage == 0} ? 'disabled'"
      th:href="@{/teams(page=${currentPage - 1}, size=5)}">
@@ -342,8 +342,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
   <th:block th:each="page, status : ${totalPages}">
     <a class="page-btn"
        th:classappend="${status.index == currentPage} ? 'active'"
-       th:href="@{/teams(page=${pageIndex}, size=5)}"
-       th:text="${pageIndex + 1}">
+       th:href="@{/teams(page=${status.index}, size=5)}"
+       th:text="${status.index + 1}">
     </a>
   </th:block>
 
@@ -355,6 +355,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
   </a>
 
 </div>
+
 
 <!-- ─── Page info label (optional, shows "Page 1 of 2") ─── -->
 <p class="page-info text-center"

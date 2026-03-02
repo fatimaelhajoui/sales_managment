@@ -12,12 +12,14 @@ import org.springframework.data.domain.Page;
  *
  * @author marwa
  */
+
 public interface TeamService {
     Team OneTeam(Long user_id);
-    Page<Team> AllTeams(int page, int size);
+    Page<Team> AllTeams(String keyword,int page, int size);
     Team createTeam(Team team);
     Team editTeam(Long team_id);
     Team updateTeam(Long team_id,Team team);
     void deleteTeam(Long team_id);
     
 }
+

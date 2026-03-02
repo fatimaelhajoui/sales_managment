@@ -28,13 +28,15 @@ public class TeamController {
     
     @GetMapping("/teams")
     public String teams( Model model, 
+                        @RequestParam(name= "keyword", defaultValue = "")String keyword,
                         @RequestParam(name= "page", defaultValue = "0")int page, 
                         @RequestParam(name= "size", defaultValue = "5") int size)
     {
         
-      model.addAttribute("teamslist", teamServiceImp.AllTeams(page,size).getContent());
-      model.addAttribute("totalPages", new int[teamServiceImp.AllTeams(page,size).getTotalPages()]);
+      model.addAttribute("teamslist", teamServiceImp.AllTeams(keyword,page,size).getContent());
+      model.addAttribute("totalPages", new int[teamServiceImp.AllTeams(keyword,page,size).getTotalPages()]);
       model.addAttribute("currentPage", page);
+      model.addAttribute("keyword", keyword);
         return "teams/teams";
     } 
     
@@ -53,16 +55,26 @@ public class TeamController {
     }
     
     @GetMapping("/teams/edit_form")
-    public String teamEdit(@RequestParam Long team_id, Model model) {
+    public String teamEdit(@RequestParam Long team_id, Model model,
+                        @RequestParam(name= "keyword", defaultValue = "")String keyword,
+                        @RequestParam(name= "page", defaultValue = "0")int page, 
+                        @RequestParam(name= "size", defaultValue = "5") int size) {
         model.addAttribute("team", teamServiceImp.editTeam(team_id));
+        model.addAttribute("currentPage", page);
+        model.addAttribute("keyword", keyword);
         return "teams/edit_form";
     }
     
     @PostMapping("/teams/update")
-    public String updateTeam(@Valid Team team, BindingResult bindingResult) {
+    public String updateTeam(@Valid Team team, BindingResult bindingResult, Model model,
+                        @RequestParam(name= "keyword", defaultValue = "")String keyword,
+                        @RequestParam(name= "page", defaultValue = "0")int page, 
+                        @RequestParam(name= "size", defaultValue = "5") int size) {
         if (bindingResult.hasErrors()) return "teams/edit_form";
         teamServiceImp.updateTeam(team.getId(), team);
-        return "redirect:/teams";
+        model.addAttribute("currentPage", page);
+        model.addAttribute("keyword", keyword);
+        return "redirect:/teams?page="+ page +"&keyword="+ keyword;
     }
     
    @PostMapping("/teams/delete")

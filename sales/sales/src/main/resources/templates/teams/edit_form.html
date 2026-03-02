@@ -5,7 +5,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 -->
 <html lang="en" xmlns:th="http://www.thymeleaf.org" >
     <head>
-        <title>TODO supply a title</title>
+        <title>Edit Team</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Edit Team Form</title>
@@ -45,6 +45,12 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                 opacity: 1;
                 transform: translateY(0);
             }
+        }
+
+        .text-danger{
+            color: red;
+            font-style: italic;
+            font-size: 12px;
         }
 
         .form-header {
@@ -197,7 +203,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
             <h1>Edit Team</h1>
         </div>
 
-        <form id="teamForm" method="post" th:action="@{/teams/update}" th:object="${team}">
+        <form id="teamForm" method="post" th:action="@{/teams/update(page=${currentPage}, keyword=${keyword})}" th:object="${team}">
             <div class="form-group">
                 <input type="hidden" th:field="*{id}"/>
                 <label for="teamName">Team Name *</label>

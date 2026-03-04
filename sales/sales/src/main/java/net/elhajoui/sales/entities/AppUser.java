@@ -40,7 +40,7 @@ public class AppUser {
     private String role;
     
     @Column(name = "status", nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
-    private Boolean status;
+    private Boolean status = false;
     
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "team_id", nullable = false)

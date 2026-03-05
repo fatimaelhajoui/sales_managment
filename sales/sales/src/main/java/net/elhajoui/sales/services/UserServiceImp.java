@@ -65,7 +65,14 @@ public class UserServiceImp implements UserService {
 
     @Override
     public AppUser editAppUser(Long appUser_id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        AppUser my_user= userRepository.findById(appUser_id).orElseThrow(
+                ()-> new RuntimeException(
+                         "User with id " + appUser_id + " not found"
+                )
+        );
+        
+       return my_user;
+        
     }
 
     @Override

@@ -76,6 +76,43 @@ public class UserController {
         return "users/edit_form";
     }
     
+     @PostMapping("/users/update")
+    public String updateAppUser(@Valid AppUser appUser, BindingResult bindingResult, Model model,
+                        @RequestParam(name= "keyword", defaultValue = "")String keyword,
+                        @RequestParam(name= "page", defaultValue = "0")int page, 
+                        @RequestParam(name= "size", defaultValue = "5") int size,
+                        @RequestParam(name= "teamId", required = false) Long teamId) {
+
+        // Manually bind team
+        if (teamId != null) {
+            net.elhajoui.sales.entities.Team t = new net.elhajoui.sales.entities.Team();
+            t.setId(teamId);
+            appUser.setTeam(t);
+        }
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("my_user", appUser);
+            model.addAttribute("teams", teamRepository.findAll());
+            model.addAttribute("currentPage", page);
+            model.addAttribute("keyword", keyword);
+            return "users/edit_form";
+        }
+
+        try {
+            userService.updateAppUser(appUser.getId(), appUser);
+        } catch (RuntimeException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("my_user", appUser);
+            model.addAttribute("teams", teamRepository.findAll());
+            model.addAttribute("currentPage", page);
+            model.addAttribute("keyword", keyword);
+            return "users/edit_form";
+        }
+
+        return "redirect:/users?page=" + page + "&keyword=" + keyword;
+    }
+    
+    
     
     
 }

@@ -14,6 +14,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @author marwa
  */
 public interface UserRepository extends JpaRepository<AppUser,Long>{
-    boolean existsByMail(String mail);
     Page<AppUser> findByUsernameContaining(String keyword, Pageable page);
+    boolean existsByMail(String mail);
+    boolean existsByMailAndIdNot(String mail, Long id); //Only block if ANOTHER user has that email in edit_form
 }
+

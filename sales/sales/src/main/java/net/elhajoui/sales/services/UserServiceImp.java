@@ -51,16 +51,16 @@ public class UserServiceImp implements UserService {
         .orElseThrow(() -> new RuntimeException(
             "Team with id " + appUser.getTeam().getId() + " not found"
         ));
-        appUser.setUsername(appUser.getUsername());
-        appUser.setMail(appUser.getMail());
-        appUser.setPassword(appUser.getPassword());
-        appUser.setRole(appUser.getRole());
-        appUser.setStatus(appUser.getStatus());
-        appUser.setTeam(team);
+        new_appUser.setUsername(appUser.getUsername());
+        new_appUser.setMail(appUser.getMail());
+        new_appUser.setPassword(appUser.getPassword());
+        new_appUser.setRole(appUser.getRole());
+        new_appUser.setStatus(appUser.getStatus());
+        new_appUser.setTeam(team);
         
-        userRepository.save(appUser);
+        userRepository.save(new_appUser);
         
-        return appUser;
+        return new_appUser;
    }
 
     @Override
@@ -77,12 +77,40 @@ public class UserServiceImp implements UserService {
 
     @Override
     public AppUser updateAppUser(Long appUser_id, AppUser appUser) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        Team team = null;
+                
+        AppUser edit_user= userRepository.findById(appUser_id).orElseThrow(
+                ()-> new RuntimeException(
+                         "User with id " + appUser_id + " not found"
+                )
+        );
+        
+        if (userRepository.existsByMailAndIdNot(appUser.getMail(), appUser_id)) {
+    throw new RuntimeException("Email '" + appUser.getMail() + "' is already in use");
+        }
+
+        team = teamRepository.findById(appUser.getTeam().getId())
+        .orElseThrow(() -> new RuntimeException(
+            "Team with id " + appUser.getTeam().getId() + " not found"
+        ));
+        
+        edit_user.setUsername(appUser.getUsername());
+        edit_user.setRole(appUser.getRole());
+        edit_user.setMail(appUser.getMail());
+        edit_user.setTeam(team);
+        edit_user.setStatus(appUser.getStatus());
+        edit_user.setPassword(appUser.getPassword());
+        
+        userRepository.save(edit_user);
+        
+        return edit_user;
+        
+        
     }
 
     @Override
     public void deleteAppUser(Long appUser_id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        
     }
     
 }

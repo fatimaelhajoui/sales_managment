@@ -339,6 +339,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                 <a class="action-btn" th:href="@{/users/edit_form(user_id=${u.id})}" title="Edit">
                                     <i class="fas fa-edit"></i>
                                 </a>
+                                <a class="action-btn delete-btn" th:data-id="${u.id}" th:data-name="${u.username}" onclick="openDeleteModal(this)" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </a>
                             </div>
                         </td>
                     </tr>
@@ -379,6 +382,21 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 </p>
         </div>
             
+        
+          <!-- DELETE Modal -->
+      <div id="deleteModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;">
+    <div style="background:white; border-radius:12px; padding:40px; max-width:420px; width:90%; box-shadow:0 8px 32px rgba(0,0,0,0.2); text-align:center;">
+        <div style="width:60px; height:60px; background:#fce4e6; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 20px;">
+            <i class="fas fa-trash" style="color:#d32f2f; font-size:24px;"></i>
+        </div>
+        <h2 style="font-size:20px; font-weight:600; margin-bottom:12px;">Delete Team</h2>
+        <p id="modalMessage" style="color:#666; margin-bottom:32px; font-size:15px;"></p>
+        <div style="display:flex; gap:12px;">
+            <button onclick="cancelDelete()" style="flex:1; padding:12px; border:1px solid #e0e0e0; border-radius:8px; background:#f0f0f0; font-size:14px; cursor:pointer;">Cancel</button>
+            <button onclick="confirmDelete()" style="flex:1; padding:12px; border:none; border-radius:8px; background:#d32f2f; color:white; font-size:14px; cursor:pointer;">Yes, Delete</button>
+        </div>
+    </div>
+</div>
  
 <!-- Hidden form that does the actual DELETE request -->
 <form id="deleteForm" method="post">
@@ -386,6 +404,37 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 </form>
     </div>
     </div>
+    
+    <script>
+    let UserToDeleteId = null;
+let UserDeleteRow = null;
+
+function openDeleteModal(btn) {
+    UserToDeleteId = btn.getAttribute('data-id');
+    UserToDeleteRow = btn.closest('tr');
+    document.getElementById('modalMessage').textContent = 
+        `Do you want to delete "${btn.getAttribute('data-name')}"?`;
+    document.getElementById('deleteModal').style.display = 'flex';
+}
+
+function cancelDelete() {
+    document.getElementById('deleteModal').style.display = 'none';
+    UserToDeleteId = null;
+    UserToDeleteRow = null;
+}
+
+function confirmDelete() {
+    // Set the form action dynamically and submit
+    document.getElementById('deleteForm').action = '/users/delete?user_id=' + UserToDeleteId;
+    document.getElementById('deleteForm').submit();
+}
+
+document.getElementById('deleteModal').addEventListener('click', function(e) {
+    if (e.target === this) cancelDelete();
+});
+</script>
 
     </body>
+    
+    
 </html>

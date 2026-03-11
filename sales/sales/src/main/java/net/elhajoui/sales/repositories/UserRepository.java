@@ -17,5 +17,8 @@ public interface UserRepository extends JpaRepository<AppUser,Long>{
     Page<AppUser> findByUsernameContaining(String keyword, Pageable page);
     boolean existsByMail(String mail);
     boolean existsByMailAndIdNot(String mail, Long id); //Only block if ANOTHER user has that email in edit_form
+    Optional<AppUser> findOneByUsername(String username); //to find the authenticated user 
+
 }
+
 

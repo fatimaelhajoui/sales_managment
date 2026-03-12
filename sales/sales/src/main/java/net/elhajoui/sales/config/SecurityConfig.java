@@ -37,8 +37,13 @@ public class SecurityConfig {
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(auth -> {
              auth.requestMatchers("/login/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/users/add_form").permitAll()
-                .requestMatchers(HttpMethod.POST, "/users/save").permitAll()
+                //for table Team    
+                .requestMatchers(HttpMethod.GET, "/teams/**").hasRole("MANAGER")
+                .requestMatchers(HttpMethod.POST, "/teams/**").hasRole("MANAGER")
+                //for table AppUser 
+                .requestMatchers(HttpMethod.GET, "/users/**").hasRole("MANAGER")
+                .requestMatchers(HttpMethod.POST, "/users/**").hasRole("MANAGER")
+                
                 .anyRequest().authenticated();
                 
             })

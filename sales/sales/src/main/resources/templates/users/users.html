@@ -263,6 +263,57 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
     border-right: none;
     }
 
+        /* ── Role badges ── */
+        .badge-role {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.4px;
+            text-transform: uppercase;
+        }
+        .badge-manager {
+            background-color: #eff6ff;
+            color: #2563eb;
+            border: 1.5px solid #bfdbfe;
+        }
+        .badge-agent {
+            background-color: #f5f3ff;
+            color: #7c3aed;
+            border: 1.5px solid #ddd6fe;
+        }
+        /* ── Status badges ── */
+        .badge-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.4px;
+            text-transform: uppercase;
+        }
+        .badge-active {
+            background-color: #f0fdf4;
+            color: #16a34a;
+            border: 1.5px solid #bbf7d0;
+        }
+        .badge-inactive {
+            background-color: #fef2f2;
+            color: #dc2626;
+            border: 1.5px solid #fecaca;
+        }
+        .badge-status::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: currentColor;
+            flex-shrink: 0;
+        }
+
         @media (max-width: 768px) {
             .header {
                 flex-direction: column;
@@ -320,9 +371,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
             <table id="usersTable">
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Username</th> 
-                        <th>ROLE</th>
+                        <th>Username</th>
+                        <th>ROLE</th> 
+                        <th>Team</th>
                         <th>Satatus</th>
                         <th>Actions</th>
                     </tr>
@@ -330,10 +381,18 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                 <tbody id="tableBody">
                     <!-- My data -->
                     <tr th:each="u:${userslist}"> 
-                        <td th:text="${u.id}"></td>
                         <td th:text="${u.username}"></td>
-                        <td th:text="${u.role}"></td>
-                        <td th:text="${u.status}"></td>
+                        <td>
+                            <span class="badge-role"
+                                  th:classappend="${u.role == 'MANAGER'} ? 'badge-manager' : 'badge-agent'"
+                                  th:text="${u.role}"></span>
+                        </td>
+                        <td th:text="${u.team.name}"></td>
+                        <td>
+                            <span class="badge-status"
+                                  th:classappend="${u.status} ? 'badge-active' : 'badge-inactive'"
+                                  th:text="${u.status} ? 'Active' : 'Inactive'"></span>
+                        </td>
                         <td>
                             <div class="actions">
                                 <a class="action-btn" th:href="@{/users/edit_form(user_id=${u.id})}" title="Edit">

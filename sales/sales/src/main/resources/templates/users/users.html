@@ -3,9 +3,10 @@
 Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
 Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
 -->
-<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{main/layout}">
     <head>
         <title>Users List</title>
+        <th:block layout:fragment="head">
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="/webjars/bootstrap/5.3.7/css/bootstrap.min.css">
@@ -336,8 +337,13 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
             
         }
     </style>
+        </th:block>
     </head>
     <body>
+        <th:block layout:fragment="page-title">User Management</th:block>
+            <div layout:fragment="content">
+
+        <div layout:fragment="content">
         <div class="container">
         <div class="header">
             
@@ -464,7 +470,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
     </div>
     </div>
     
+    <th:block layout:fragment="scripts">
     <script>
+        
     let UserToDeleteId = null;
 let UserDeleteRow = null;
 
@@ -492,6 +500,8 @@ document.getElementById('deleteModal').addEventListener('click', function(e) {
     if (e.target === this) cancelDelete();
 });
 </script>
+    </th:block>
+
 
     </body>
     

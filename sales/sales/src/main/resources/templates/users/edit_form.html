@@ -1,6 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{main/layout}">
     <head>
+        <th:block layout:fragment="head">
         <title>Edit User</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -442,9 +445,11 @@
             .password-fields { grid-template-columns: 1fr; }
         }
         </style>
+        </th:block>
     </head>
 
     <body>
+        <div layout:fragment="content">
         <div class="form-container">
 
             <div class="form-header">
@@ -579,7 +584,8 @@
 
             </form>
         </div>
-
+        </div>
+        <th:block layout:fragment="scripts">
         <script>
         const toggle      = document.getElementById('changePasswordToggle');
         const section     = document.getElementById('passwordSection');
@@ -696,6 +702,7 @@
                 matchHint.className = 'match-hint fail';
             }
         });
-        </script>
+       </script>
+        </th:block>
     </body>
 </html>

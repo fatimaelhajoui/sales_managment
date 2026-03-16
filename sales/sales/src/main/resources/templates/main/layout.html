@@ -436,9 +436,6 @@
         <div class="sidebar-brand-row">
             <div class="brand-icon"><i class="fas fa-chart-line"></i></div>
             <span class="brand-text">SalesApp</span>
-            <button class="collapse-btn" id="collapseBtn" onclick="toggleSidebar()" title="Collapse sidebar">
-                <i class="fas fa-chevron-left" id="collapseIcon"></i>
-            </button>
         </div>
     </div>
 
@@ -477,8 +474,8 @@
                 <span th:text="U">U</span>
             </div>
             <div class="user-info">
-                <div class="user-name" th:text="user">Username</div>
-                <div class="user-role" th:text="role">Role</div>
+                <div class="user-name" th:text="${#authentication.name}">Username</div>
+                <div class="user-role" th:text="${#authentication.authorities[0]}">Role</div>
             </div>
         </div>
 
@@ -496,22 +493,6 @@
 <!-- ══ MAIN ══ -->
 <div class="main-wrapper" id="mainWrapper">
 
-    <!-- Top bar -->
-    <header class="topbar">
-        <div style="display:flex; align-items:center; gap:12px;">
-            <button class="mobile-menu-btn" onclick="openMobileSidebar()">
-                <i class="fas fa-bars"></i>
-            </button>
-            <span class="topbar-title" layout:fragment="page-title">Page</span>
-        </div>
-        <div class="topbar-right">
-            <div class="topbar-user">
-                <i class="fas fa-user-circle" style="font-size:18px;"></i>
-                <span th:text="user">User</span>
-            </div>
-        </div>
-    </header>
-
     <!-- Page content injected here -->
     <main class="page-content">
         <div layout:fragment="content">
@@ -522,25 +503,7 @@
 </div>
 
 <script>
-/* ── Sidebar collapse ── */
-const sidebar     = document.getElementById('sidebar');
-const mainWrapper = document.getElementById('mainWrapper');
-const collapseIcon = document.getElementById('collapseIcon');
 
-const COLLAPSED_KEY = 'sidebar_collapsed';
-if (localStorage.getItem(COLLAPSED_KEY) === 'true') {
-    sidebar.classList.add('collapsed');
-    mainWrapper.classList.add('expanded');
-    collapseIcon.classList.replace('fa-chevron-left', 'fa-chevron-right');
-}
-
-function toggleSidebar() {
-    const isCollapsed = sidebar.classList.toggle('collapsed');
-    mainWrapper.classList.toggle('expanded', isCollapsed);
-    collapseIcon.classList.toggle('fa-chevron-left', !isCollapsed);
-    collapseIcon.classList.toggle('fa-chevron-right', isCollapsed);
-    localStorage.setItem(COLLAPSED_KEY, isCollapsed);
-}
 
 /* ── Mobile sidebar ── */
 const overlay = document.getElementById('sidebarOverlay');

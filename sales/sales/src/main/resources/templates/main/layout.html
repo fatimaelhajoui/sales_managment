@@ -475,7 +475,7 @@
             </div>
             <div class="user-info">
                 <div class="user-name" th:text="${#authentication.name}">Username</div>
-                <div class="user-role" th:text="${#authentication.authorities[0]}">Role</div>
+                <div class="user-role" th:text="${#authentication.authorities[0] == 'MANAGER' ? 'Manager' : 'Agent'}">Role</div>
             </div>
         </div>
 

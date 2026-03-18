@@ -53,10 +53,25 @@ public class UserServiceImp implements UserService {
         throw new RuntimeException("Email '" + appUser.getMail() + "' is already in use");
         }
 
+       // Check if team exists
         team = teamRepository.findById(appUser.getTeam().getId())
         .orElseThrow(() -> new RuntimeException(
             "Team with id " + appUser.getTeam().getId() + " not found"
         ));
+
+       // Check if the new user is a manager and ensure the team has no manager yet
+        if ("MANAGER".equalsIgnoreCase(appUser.getRole())) {
+            boolean managerExists = userRepository
+            .findByTeamIdAndRole(team.getId(), "MANAGER")
+            .isPresent();
+            if (managerExists) {
+            throw new RuntimeException(
+                "Team '" + team.getName() + "' already has a manager. " +
+                "A team can only have one manager."
+            );
+            }
+        }
+       
         new_appUser.setUsername(appUser.getUsername());
         new_appUser.setMail(appUser.getMail());
         new_appUser.setPassword(passwordEncoder.encode(appUser.getPassword()));

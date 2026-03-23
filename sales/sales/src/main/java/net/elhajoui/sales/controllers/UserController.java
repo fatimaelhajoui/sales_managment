@@ -35,8 +35,15 @@ public class UserController {
                         @RequestParam(name= "keyword", defaultValue = "")String keyword, 
                         @RequestParam(name= "page", defaultValue = "0")int page, 
                         @RequestParam(name= "size", defaultValue = "5") int size){
-        model.addAttribute( "userslist", userService.AllUsers(keyword, page, size).getContent() );
-        model.addAttribute( "totalPages", new int[userService.AllUsers(keyword, page, size).getTotalPages()] );
+         CustomUserDetails loggedInUser = (CustomUserDetails) SecurityContextHolder
+        .getContext()
+        .getAuthentication()
+        .getPrincipal();
+        
+        Long userId = loggedInUser.getId();
+    
+        model.addAttribute( "userslist", userService.AllUsers(userId,keyword, page, size).getContent() );
+        model.addAttribute( "totalPages", new int[userService.AllUsers(userId,keyword, page, size).getTotalPages()] );
         model.addAttribute("currentPage", page);
         model.addAttribute("keyword", keyword);
         return "users/users";

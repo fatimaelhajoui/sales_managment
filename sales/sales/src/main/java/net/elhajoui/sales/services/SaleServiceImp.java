@@ -93,35 +93,58 @@ public class SaleServiceImp implements SaleService{
         return saleRepository.save(sale);
     }
 
+ 
     @Override
-    public Resource downloadFile(Long saleId) throws IOException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public Page<Sale> getAllSales(Long user_id,String keyword,int page, int size) {
+         AppUser loggedInUser = userRepository.findById(user_id)
+        .orElseThrow(() -> new RuntimeException("User not found"));
+         
+         if(("ADMIN").equalsIgnoreCase(loggedInUser.getRole())){
+            return saleRepository.findByContractIdContaining(keyword, PageRequest.of(page, size));
+        }else{
+           return  saleRepository.findByAgent_Team_IdAndContractIdContaining(loggedInUser.getTeam().getId(),keyword, PageRequest.of(page, size));
+        }
+         
     }
 
     @Override
-    public List<Sale> getAllSales() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public Sale getSaleById(Long user_id, Long id) {
+        AppUser loggedInUser = userRepository.findById(user_id)
+        .orElseThrow(() -> new RuntimeException("User not found"));
+        
+         if(("ADMIN").equalsIgnoreCase(loggedInUser.getRole())){
+            return saleRepository.findById(id).orElseThrow(() -> new RuntimeException("Sale not found"));
+        }else{
+           return saleRepository.findByAgent_Team_IdAndId(user_id, id);
+        }
+         
     }
 
     @Override
-    public Sale getSaleById(Long id) {
-        return saleRepository.findById(id).orElseThrow(() -> new RuntimeException("this sale not exist!"));
-    }
-
-    @Override
-    public Sale updateStatus(Long id, SaleStatus status) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public Sale updateStatus(Long user_id,Long id, SaleStatus status) {
+        AppUser loggedInUser = userRepository.findById(user_id)
+        .orElseThrow(() -> new RuntimeException("User not found"));
+        
+        if(("ADMIN").equalsIgnoreCase(loggedInUser.getRole())){
+            Sale agent_sale= saleRepository.findById(id).orElseThrow(() -> new RuntimeException("this sale not exist!"));
+        
+            agent_sale.setStatus(status);
+        
+            return saleRepository.save(agent_sale);
+        }
+        else{
+            Sale agent_sale=  saleRepository.findByAgent_Team_IdAndId(user_id, id);
+            
+            agent_sale.setStatus(status);
+        
+            return saleRepository.save(agent_sale);
+        }
     }
 
     @Override
     public Page<Sale> getSalesByAgent(Long userId, String keyword,int page, int size) {
         
         return saleRepository.findByAgent_IdAndContractIdContaining(userId, keyword, PageRequest.of(page, size));
-    }
-
-    @Override
-    public void deleteSale(Long id) throws IOException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override

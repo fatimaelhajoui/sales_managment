@@ -27,6 +27,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import net.elhajoui.sales.enums.SaleStatus;
 
 /**
  *
@@ -36,6 +37,8 @@ import java.nio.file.Paths;
 public class SaleController {
     @Autowired
     private SaleServiceImp saleServiceImp;
+    
+    //Agent
     
     @GetMapping("/agent/my_sales")
     public String sales(Model model,
@@ -54,13 +57,13 @@ public class SaleController {
         model.addAttribute( "totalPages", new int[saleServiceImp.getSalesByAgent(userId,keyword, page, size).getTotalPages()] );
         model.addAttribute("currentPage", page);
         model.addAttribute("keyword", keyword);
-        return "sales/sales";
+        return "sales/agent/sales";
     }
     
     @GetMapping("/agent/add_sale")
     public String teamAdd(Model model){
         model.addAttribute("sale", new Sale()); 
-        return "sales/add_form";
+        return "sales/agent/add_form";
     }
     
     @PostMapping(path = "/sales/save")
@@ -69,7 +72,7 @@ public class SaleController {
         if(bindingResult.hasErrors()) return "/sales/add_sale";
         saleServiceImp.uploadSale(file, sale.getContractId(), auth.getName());
         model.addAttribute("successMessage", "Sale uploaded successfully!");
-        return "redirect:/my_sales";
+        return "redirect:/agent/my_sales";
     }
     
     @GetMapping("/agent/my_sale")
@@ -85,7 +88,7 @@ public class SaleController {
         Sale my_sale= saleServiceImp.getSaleByIdAndAgent(userId, saleId);
         
         model.addAttribute("my_sale", my_sale); 
-        return "sales/my_sale";
+        return "sales/agent/my_sale";
     }
     
     
@@ -106,9 +109,61 @@ public class SaleController {
         return ResponseEntity.ok()
         .contentType(MediaType.parseMediaType(sale.getContentType()))
         .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + sale.getOriginalFile() + "\"")
-        .header("X-Frame-Options", "SAMEORIGIN")  // add this
+        .header("X-Frame-Options", "SAMEORIGIN") 
         .body(resource);
 }
     
+    //Manager & admin
+    @GetMapping("/sales")
+    public String AllSales(Model model,
+                        @RequestParam(name= "keyword", defaultValue = "")String keyword, 
+                        @RequestParam(name= "page", defaultValue = "0")int page, 
+                        @RequestParam(name= "size", defaultValue = "5") int size){
+        
+        CustomUserDetails loggedInUser = (CustomUserDetails) SecurityContextHolder
+        .getContext()
+        .getAuthentication()
+        .getPrincipal();
+        
+        Long userId = loggedInUser.getId();
+    
+        model.addAttribute( "saleslist", saleServiceImp.getAllSales(userId,keyword, page, size).getContent() );
+        model.addAttribute( "totalPages", new int[saleServiceImp.getAllSales(userId,keyword, page, size).getTotalPages()] );
+        model.addAttribute("currentPage", page);
+        model.addAttribute("keyword", keyword);
+        return "sales/manager/sales";
+    }
+    
+    
+    @GetMapping("/agent_sale")
+    public String showAgentSale(@RequestParam Long saleId, Model model){
+        
+        CustomUserDetails loggedInUser = (CustomUserDetails) SecurityContextHolder
+        .getContext()
+        .getAuthentication()
+        .getPrincipal();
+        
+        Long userId = loggedInUser.getId();
+        
+        Sale my_sale= saleServiceImp.getSaleById(userId, saleId);
+        
+        model.addAttribute("agent_sale", my_sale); 
+        return "sales/manager/agent_sale";
+    }
+    
+    
+    
+    @PostMapping("/sale_status/update")
+    public String updateStatus(
+        @RequestParam Long id,
+        @RequestParam SaleStatus status,   
+        @RequestParam(defaultValue = "") String keyword,
+        @RequestParam(defaultValue = "0") int page) {
+
+        CustomUserDetails loggedInUser = (CustomUserDetails) SecurityContextHolder .getContext().getAuthentication().getPrincipal();
+
+        saleServiceImp.updateStatus(loggedInUser.getId(), id, status);
+        return "redirect:/sales?page=" + page + "&keyword=" + keyword;
+    }
     
 }

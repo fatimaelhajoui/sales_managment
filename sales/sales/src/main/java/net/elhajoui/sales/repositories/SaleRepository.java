@@ -16,8 +16,16 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @author marwa
  */
 public interface SaleRepository extends JpaRepository<Sale ,Long>{
+     //agent
     List<Sale> findByAgentUsername(String username);
     Page<Sale> findByAgent_IdAndContractIdContaining(Long user_id, String keyword, Pageable page);
     Sale findByAgent_IdAndId(Long user_id, Long sale_id);
     
+    
+    //manager
+    Page<Sale> findByAgent_Team_IdAndContractIdContaining(Long teamId, String keyword, Pageable page);
+    Sale findByAgent_Team_IdAndId(Long user_id, Long sale_id);
+
+    //admin
+    Page<Sale> findByContractIdContaining(String keyword, Pageable page);
 }

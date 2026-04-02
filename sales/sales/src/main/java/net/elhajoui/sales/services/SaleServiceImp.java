@@ -148,8 +148,24 @@ public class SaleServiceImp implements SaleService{
     }
 
     @Override
-    public Sale getSaleByIdAndAgent(Long agent_id, Long id) {
-        return saleRepository.findByAgent_IdAndId(agent_id, id);
+    public Sale getSaleByIdAndAgent(Long user_id, Long id) {
+        AppUser loggedInUser = userRepository.findById(user_id)
+        .orElseThrow(() -> new RuntimeException("User not found"));
+        
+        if(("Admin").equalsIgnoreCase(loggedInUser.getRole())){
+            
+            return saleRepository.findById(id).orElseThrow(() -> new RuntimeException("this sale not exist!"));
+        }
+        else if(("Manager").equalsIgnoreCase(loggedInUser.getRole())){
+            
+            return saleRepository.findByAgent_Team_IdAndId(user_id, id);
+        }
+        else{ //agent role
+            
+            return saleRepository.findByAgent_IdAndId(user_id, id);
+        }
+        
+        
     }
     
 }

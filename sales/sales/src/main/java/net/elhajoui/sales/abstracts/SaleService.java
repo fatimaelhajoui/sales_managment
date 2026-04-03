@@ -19,7 +19,6 @@ import org.springframework.data.domain.Page;
 public interface SaleService {
     
     //manager & admin
-
     Page<Sale> getAllSales(Long user_id,String keyword,int page, int size);
 
     Sale updateStatus(Long user_id,Long id, SaleStatus status);
@@ -27,11 +26,11 @@ public interface SaleService {
     Sale getSaleById(Long user_id,Long id);
     
     //agent
-    Sale uploadSale(MultipartFile file, String contractId, String username) throws IOException;
+    Sale uploadSale(MultipartFile file, String contractId, String note, String username) throws IOException;
     
     Page<Sale> getSalesByAgent(Long userId, String keyword,int page, int size);
     
-    Sale getSaleByIdAndAgent(Long agent_id, Long id);
+    Sale getSaleByIdAndAgent(Long user_id, Long id);
 
     
 }
